@@ -1,6 +1,6 @@
 # Include your project-specific ignores in this file
 !.gitignore
-.idea/*
+.idea/
 .settings/
 *.log
 
@@ -16,5 +16,6 @@ thumbs.db
 
 # dev dependencies
 
-/node_modules
-/bower_components
+node_modules/
+bower_components/
+.tmp/
