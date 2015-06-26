@@ -1,0 +1,29 @@
+{
+  "name": "core.dev",
+  "version": "0.0.1",
+  "authors": [
+    "Anton Konyushevskiy <a@konyushevskiy.com>"
+  ],
+  "description": "Core template for better than projects",
+  "main": "build/index.html",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "javascript",
+    "html",
+    "css",
+    "scss"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4"
+  }
+}
