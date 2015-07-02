@@ -102,6 +102,12 @@ module.exports = function (grunt) {
 				cwd: 'dev/images/vendor/',
 				src: ['**/*'],
 				dest: 'build/images/'
+			},
+			fonts:{
+				expand: true,
+				cwd: 'dev/fonts/',
+				src: ['**/*'],
+				dest: 'build/fonts/'
 			}
 		},
 
@@ -110,8 +116,26 @@ module.exports = function (grunt) {
 		*/
 		svg_sprite : {
 			options : {
+				shape : {
+					id : {
+						separator : '-',
+						generator : function(path){
+							/*
+								Return only filename as ID and capitalize first letter
+							*/
+							var path_array = path.split('/');
+							var filename = path_array[path_array.length - 1];
+							filename = filename.replace('.svg', '');
+							filename = filename.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+							return filename;
+						}
+					}
+				},
 				mode : {
-					symbol : true,
+					symbol : {
+						default : true,
+						dest : ''
+					},
 					bust: false,
 					sprite: "sprite.svg"
 				}
@@ -155,6 +179,33 @@ module.exports = function (grunt) {
 					file_extension: '.html'
 				}
 			}
+		},
+
+		/*
+		 Watch
+		 */
+
+		watch : {
+			js : {
+				files: ['dev/js/**/*'],
+				tasks: ['jshint', 'rig:js', 'newer:copy:js', 'newer:copy:vendor']
+			},
+			scss : {
+				files: ['dev/scss/**/*'],
+				tasks: ['sass:fast']
+			},
+			ejs : {
+				files: ['dev/**/*.ejs', '!dev/partials/*.ejs'],
+				tasks: ['ejs_static']
+			},
+			pics : {
+				files: ['dev/images/**/*'],
+				tasks: ['newer:svg_sprite', 'newer:copy:images']
+			},
+			fonts : {
+				files : ['dev/fonts/**/*'],
+				tasks : ['newer:copy:fonts']
+			}
 		}
 	});
 
@@ -164,8 +215,8 @@ module.exports = function (grunt) {
 	Tasks
 	 */
 
-	grunt.registerTask('fast', ['sass:fast', 'jshint', 'rig:js', 'newer:copy:js', 'newer:copy:vendor', 'newer:svg_sprite','newer:copy:images', 'ejs_static']);
-	grunt.registerTask('build', ['sass:build', 'jshint', 'rig:js', 'uglify:build', 'copy:vendor', 'svg_sprite','newer:imagemin', 'ejs_static']);
+	grunt.registerTask('default', ['sass:fast', 'jshint', 'rig:js', 'newer:copy:js', 'newer:copy:vendor', 'newer:svg_sprite','newer:copy:images', 'newer:copy:fonts', 'ejs_static']);
+	grunt.registerTask('build', ['clean','sass:build', 'jshint', 'rig:js', 'uglify:build', 'copy:vendor', 'svg_sprite','newer:imagemin', 'newer:copy:fonts', 'ejs_static']);
 	grunt.registerTask('clear', ['clean']);
 
 
