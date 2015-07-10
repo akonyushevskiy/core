@@ -13,6 +13,8 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-rigger');
 	grunt.loadNpmTasks('grunt-sass');
 	grunt.loadNpmTasks('grunt-svg-sprite');
+	grunt.loadNpmTasks('grunt-combine-media-queries');
+	grunt.loadNpmTasks('grunt-csso');
 
 	require('time-grunt')(grunt);
 
@@ -28,10 +30,10 @@ module.exports = function (grunt) {
 		sass: {
 			build: {
 				options: {
-					outputStyle: 'compressed'
+					outputStyle: 'expanded'
 				},
 				files: {
-					"build/css/main.min.css": ["dev/scss/main.scss"]
+					".tmp/css/main.css": ["dev/scss/main.scss"]
 				}
 			},
 			fast: {
@@ -44,14 +46,30 @@ module.exports = function (grunt) {
 			}
 		},
 
+		cmq: {
+			build: {
+				files: {
+					".tmp/css/mq": [".tmp/css/main.css"]
+				}
+			}
+		},
+
+		csso : {
+			build: {
+				options:{
+					report: 'min'
+				},
+				files:{
+					"build/css/main.min.css": [".tmp/css/mq/main.css"]
+				}
+			}
+		},
+
 		/*
-		Javascripts
+		 Javascripts
 		 */
 		rig: {
 			js: {
-				options: {
-					banner: '/* Better than, date: <%= new Date() %> */\n'
-				},
 				files: {
 					'.tmp/js/main.min.js': ['dev/js/main.js']
 				}
@@ -84,7 +102,7 @@ module.exports = function (grunt) {
 		},
 
 		/*
-		Copy
+		 Copy
 		 */
 		copy: {
 			vendor:{
@@ -99,8 +117,14 @@ module.exports = function (grunt) {
 			},
 			images:{
 				expand: true,
-				cwd: 'dev/images/vendor/',
-				src: ['**/*'],
+				cwd: 'dev/images/',
+				src: ['**/*', '!sprites/**/*'],
+				dest: 'build/images/'
+			},
+			json:{
+				expand: true,
+				cwd: 'dev/images/',
+				src: ['**/*.json'],
 				dest: 'build/images/'
 			},
 			fonts:{
@@ -112,8 +136,8 @@ module.exports = function (grunt) {
 		},
 
 		/*
-		SVG sprites
-		*/
+		 SVG sprites
+		 */
 		svg_sprite : {
 			options : {
 				shape : {
@@ -121,15 +145,16 @@ module.exports = function (grunt) {
 						separator : '-',
 						generator : function(path){
 							/*
-								Return only filename as ID and capitalize first letter
-							*/
+							 Return only filename as ID and capitalize first letter
+							 */
 							var path_array = path.split('/');
 							var filename = path_array[path_array.length - 1];
 							filename = filename.replace('.svg', '');
 							filename = filename.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 							return filename;
 						}
-					}
+					},
+					transform : []
 				},
 				mode : {
 					symbol : {
@@ -147,25 +172,26 @@ module.exports = function (grunt) {
 		},
 
 		/*
-		Image minification
+		 Image minification
 		 */
 		imagemin : {
 			build:{
 				options: {
 					optimizationLevel: 3,
-					svgoPlugins: [{ removeViewBox: false }]
+					svgoPlugins: [{ removeViewBox: false }, {collapseGroups: false}, {cleanupIDs: false}],
+					cache: false
 				},
 				files: [{
 					expand: true,
 					cwd: 'dev/images/',
-					src: ['**/*.{png,jpg,gif,svg}'],
+					src: ['**/*.{png,jpg,gif,svg}', '!sprites/**/*'],
 					dest: 'build/images/'
 				}]
 			}
 		},
 
 		/*
-		EJS templates
+		 EJS templates
 		 */
 		ejs_static: {
 			templates: {
@@ -188,7 +214,7 @@ module.exports = function (grunt) {
 		watch : {
 			js : {
 				files: ['dev/js/**/*'],
-				tasks: ['jshint', 'rig:js', 'newer:copy:js', 'newer:copy:vendor']
+				tasks: ['newer:jshint', 'rig:js', 'newer:copy:js', 'newer:copy:vendor']
 			},
 			scss : {
 				files: ['dev/scss/**/*'],
@@ -212,12 +238,11 @@ module.exports = function (grunt) {
 
 
 	/*
-	Tasks
+	 Tasks
 	 */
 
-	grunt.registerTask('default', ['sass:fast', 'jshint', 'rig:js', 'newer:copy:js', 'newer:copy:vendor', 'newer:svg_sprite','newer:copy:images', 'newer:copy:fonts', 'ejs_static']);
-	grunt.registerTask('build', ['clean','sass:build', 'jshint', 'rig:js', 'uglify:build', 'copy:vendor', 'svg_sprite','newer:imagemin', 'newer:copy:fonts', 'ejs_static']);
+	grunt.registerTask('default', ['sass:fast', 'jshint', 'rig:js', 'newer:copy:js', 'newer:copy:vendor', 'svg_sprite','copy:images', 'newer:copy:fonts', 'ejs_static']);
+	grunt.registerTask('build', ['clean', 'sass:build', 'cmq:build', 'csso:build', 'jshint', 'rig:js', 'uglify:build', 'copy:vendor', 'svg_sprite','imagemin:build', 'copy:fonts', 'copy:json', 'ejs_static']);
 	grunt.registerTask('clear', ['clean']);
-
 
 };

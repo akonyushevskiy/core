@@ -1,0 +1,69 @@
+/* ==========================================================================
+   Helper classes
+   ========================================================================== */
+.lt-ie9{
+	.page_container{
+		display:none;
+	}
+}
+
+.browsehappy {
+	background: #000;
+	color: #FFF;
+	position:absolute;
+	left:0;
+	top:0;
+	width:100%;
+	height:100%;
+
+	.center{
+		img{
+			display:block;
+			margin: 0 auto 30px;
+		}
+		margin:150px auto 0;
+		text-align:center;
+		font-size:21px;
+		line-height:27px;
+		text-transform: uppercase;
+	}
+
+	a{
+		color: #FFF;
+		text-decoration: underline;
+		&:hover{
+			color: #000;
+		}
+	}
+}
+
+.clearfix:before,
+.clearfix:after {
+	content: " ";
+	display: table;
+}
+.clearfix:after {
+	clear: both;
+}
+.clearfix {
+	*zoom: 1;
+}
+
+.notransition {
+	-webkit-transition: none !important;
+	-moz-transition: none !important;
+	-o-transition: none !important;
+	-ms-transition: none !important;
+	transition: none !important;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button{
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+input[type=number]{
+	-moz-appearance: textfield;
+	-ms-appearance: textfield;
+}

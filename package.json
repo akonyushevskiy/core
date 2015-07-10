@@ -1,6 +1,6 @@
 {
   "name": "core.dev",
-  "version": "0.0.1",
+  "version": "1.0",
   "description": "Core template for better than project",
   "main": "gruntfile.js",
   "scripts": {
@@ -17,13 +17,14 @@
     "js"
   ],
   "author": "Anton Konyushevskiy",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/akonyushevskiy/core/issues"
   },
   "homepage": "https://github.com/akonyushevskiy/core",
   "devDependencies": {
     "grunt": "^0.4.5",
+    "grunt-combine-media-queries": "^1.0.19",
     "grunt-concurrent": "^2.0.0",
     "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-concat": "^0.5.1",
@@ -32,6 +33,7 @@
     "grunt-contrib-jshint": "^0.11.2",
     "grunt-contrib-uglify": "^0.9.1",
     "grunt-contrib-watch": "^0.6.1",
+    "grunt-csso": "^0.7.1",
     "grunt-ejs-static": "^0.4.3",
     "grunt-newer": "^1.1.1",
     "grunt-rigger": "^0.6.0",
