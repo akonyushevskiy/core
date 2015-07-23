@@ -1,8 +1,9 @@
 {
-  "name": "core.dev",
-  "version": "1.0",
+  "name": "core-dev",
+  "version": "1.0.0",
   "description": "Core template for better than project",
   "main": "gruntfile.js",
+  "private": true,
   "scripts": {
     "test": "test"
   },
