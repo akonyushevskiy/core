@@ -226,7 +226,7 @@ module.exports = function (grunt) {
 			},
 			pics : {
 				files: ['dev/images/**/*'],
-				tasks: ['newer:svg_sprite', 'newer:copy:images']
+				tasks: ['svg_sprite', 'copy:images']
 			},
 			fonts : {
 				files : ['dev/fonts/**/*'],
